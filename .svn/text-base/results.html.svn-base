@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	</head>
+
+	<body>
+		
+		
+		<div id="contentId" style="text-align: center; margin-top: 150px;">
+			成绩查询中......
+		</div>
+		
+	<script src="js/mui.min.js"></script>
+	<script src="js/config.js"></script>
+	<script src="js/app.js"></script>	
+	<script src="./js/jquery.min.js"></script>	
+	<script type="text/javascript">
+	
+		mui.init();
+		(function($) {
+			//先去后台请求当前的openId
+			var obj = app.parseLocationQueryString();
+			var code = obj["code"];
+			if(code){
+				var url = CONFIG.basePath + "/api/wx/getOpenId.json";
+				mui.post(url, {code: code}, function (res) {
+					res = JSON.parse(res);
+					if(res.result == "1"){
+						var openId = res.data;
+						if(openId){
+							var url = CONFIG.basePath + "/api/results.json";
+							mui.post(url, {openId: openId}, function (res1) {
+								res1 = JSON.parse(res1);
+								var result = res1.result + "";
+								if(!result){ result="3"; }
+								var success = res1.success + "";
+								if(!success){ success="3" ; }
+								if(result == "0"){
+									alert(res1.data.errorMessage);
+								}
+								if(success == "0"){
+									document.getElementById("contentId").innerText = "请您耐心等待，成绩稍后发出";
+								}else if(success == "1"){
+									if(res1.data  instanceof Array &&  res1.data.length>0){
+										document.getElementById("contentId").innerText = "恭喜"+res1.data[0].RealName+"成绩合格，代驾注册号："+res1.data[0].RegisterNumber;
+									}else{
+										document.getElementById("contentId").innerText = "请您耐心等待，成绩稍后发出";
+									}
+								}
+								
+							});
+						}
+					}else{
+						mui.toast(res.data.errorMessage);
+					}
+				});
+			}
+		})(mui);
+	
+	
+	</script>
+	</body>
+
+</html>

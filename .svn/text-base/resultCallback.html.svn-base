@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	</head>
+
+	<body>
+		
+	<script src="./js/jquery.min.js"></script>	
+	<script type="text/javascript">
+		var obj = {};
+        var href = window.location.href;
+        var pos = href.indexOf("?");
+        if (pos != -1) {
+        	var queryString = href.substring(pos + 1);
+	        var paramPairArr = queryString.split("&");
+	        for (var i = 0; i < paramPairArr.length; i++) {
+	            var paramPair = paramPairArr[i];
+	            var pos1 = paramPair.indexOf("=");
+	            var paramName = paramPair.substring(0, pos1);
+	            var paramValue = paramPair.substring(pos1 + 1);
+	            obj[paramName] = paramValue;
+	        }
+        }
+        var code = obj.code;
+        if(code){
+	        //根据code 获取openid
+	        var goResultPage = "http://www.ieauto.cn:8282/examination/signup/results.html?code="+code;
+	        window.location.href = goResultPage; 
+        }
+	</script>
+	</body>
+
+</html>

@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>考试报名系统</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+		<!--标准mui.css-->
+		<link rel="stylesheet" href="./css/mui.min.css">
+		<!--App自定义的css-->
+		<link rel="stylesheet" type="text/css" href="./css/app.css"/>
+		<link href="./css/mui.picker.css" rel="stylesheet" />
+		<link href="./css/mui.poppicker.css" rel="stylesheet" />
+		<link rel="stylesheet" type="text/css" href="./css/mui.picker.min.css" />
+		<style type="text/css">
+			body{
+				height: 100%;
+				width:100%;
+				background-color: #FFFFFF;
+			}
+			.mui-input-row label{
+				width: 30%;
+				font-size: 12px;
+				padding: 14px 15px;
+				color: #9A9691;
+			}
+			.mui-input-row label~input, .mui-input-row label~select, .mui-input-row label~textarea{
+				width: 70%;
+			}
+			
+			.mui-popover {
+				height: 180px;
+			}
+			.ng-cloak{
+	        	display:none !important;
+	        }
+	        span{
+	        	 padding-left: 4px;
+	        	 color:red;
+	        }
+	        input, select, textarea{
+	        	font-size: 14px;
+	        }
+	        mui-content{
+	        	height: 100%;
+				position:relative;
+	        }
+	        
+	        .file {
+			    position: relative;
+			    background: #D0EEFF;
+			    border: 1px solid #99D3F5;
+			    border-radius: 4px;
+			    padding: 4px 12px;
+			    overflow: hidden;
+			    color: #1E88C7;
+			    text-decoration: none;
+			    text-indent: 0;
+			    line-height: 20px;
+			}
+			.file input {
+			    position: absolute;
+			    font-size: 20px;
+			    right: 0;
+			    top: 0;
+			    opacity: 0;
+			}
+			.file:hover {
+			    background: #AADFFD;
+			    border-color: #78C3F3;
+			    color: #004974;
+			    text-decoration: none;
+			}
+			.mui-btn-block{
+				padding: 10px 0;
+			}
+			#headerId{
+				display: none;
+			}
+			#contentId{
+				padding: 0;
+			}
+		</style>
+	</head>
+	<body  ng-app="ngApp" ng-controller="mainCtrl">
+		
+		<header id="headerId" class="mui-bar mui-bar-nav" style="padding-left: 0; padding-right: 0;" >
+			<div id="slider" class="mui-slider">
+				<div class="mui-slider-group mui-slider-loop">
+					<!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+					<div class="mui-slider-item mui-slider-item-duplicate">
+						<a href="#">
+							<img src="./images/cha.png" height="44" onclick="sleep();"  style="float: left; width: 15%;">
+							<img src="./images/cheyouhezi2.png" height="44" onclick="javascript:window.location.href='http://a.app.qq.com/o/simple.jsp?pkgname=cn.ieauto.autogroup.cardora'"  style="float: left; width: 85%;">
+						</a>	
+					</div>
+					<!-- 第一张 -->
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="./images/cha.png" height="44" onclick="sleep();"  style="float: left; width: 15%;">
+							<img src="./images/cheyouhezi2.png" height="44" onclick="javascript:window.location.href='http://a.app.qq.com/o/simple.jsp?pkgname=cn.ieauto.autogroup.cardora'"  style="float: left; width: 85%;">
+						</a>
+					</div>
+					<!-- 第二张 -->
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="./images/cha.png" height="44" onclick="sleep();"  style="float: left; width: 15%;">
+							<img src="./images/zijia2.png" height="44" onclick="javascript:window.location.href='http://a.app.qq.com/o/simple.jsp?pkgname=cn.ieauto.autogroup.cardora'"  style="float: left; width: 85%;">
+						</a>
+					</div>
+					<!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+					<div class="mui-slider-item mui-slider-item-duplicate">
+						<a href="#">
+							<img src="./images/cha.png" height="44" onclick="sleep();"  style="float: left; width: 15%;">
+							<img src="./images/cheyouhezi2.png" height="44" onclick="javascript:window.location.href='http://a.app.qq.com/o/simple.jsp?pkgname=cn.ieauto.autogroup.cardora'"  style="float: left; width: 85%;">
+						</a>
+					</div>
+				</div>
+			</div>
+		</header>
+		<div id="contentId" class="mui-content">
+			<div style="width: 100%; height: 30px; background-color: #FFFFFF;">
+				<a href="#popover" style="float: right; padding-top: 5px; padding-right: 5px; font-size: 12px;">报名须知</a>
+			</div>
+			<div id="popover" class="mui-popover">
+				<div class="mui-popover-arrow"></div>
+				<div class="mui-scroll-wrapper">
+					<div class="mui-scroll">
+						<ul class="mui-table-view">
+							<!--仅流应用环境下显示-->
+							<li class="mui-table-view-cell stream">1、准备好准考证、身份证</li>
+							<li class="mui-table-view-cell">2、现场报名,500元报名费</li>
+							<li class="mui-table-view-cell">3、提前30分钟进场</li>
+							<li class="mui-table-view-cell">4、不得替考或其他形式作弊</li>
+						</ul>
+					</div>
+				</div>
+	
+			</div>
+			<div id="scroll" class="mui-scroll-wrapper  ng-cloak" style="margin-top: 34px;" >
+				<form id="regFormId"  class="mui-input-group">
+					<input type="hidden" id="registrationId"  value="{{registration.id}}"/>
+					<input type="hidden" id="proviceCode"  value="{{registration.proviceCode}}"/>
+					<input type="hidden" id="cityCode"  value="{{registration.cityCode}}"/>
+					<input type="hidden" id="proviceName"  value="{{registration.proviceName}}"/>
+					<input type="hidden" id="cityName"  value="{{registration.cityName}}"/>
+					<input type="hidden" id="platCode"  value="{{registration.platCode}}"/>
+					<input type="hidden" id="companyId"  value="{{registration.companyId}}"/>
+					<input type="hidden" id="price"  value="{{registration.price}}"/>
+					<input type="hidden" id="examinationTicket"  value="{{registration.examinationTicket}}"/>
+					<input type="hidden" id="platName"  value="{{registration.platName}}"/>
+					<input type="hidden" id="companyName"  value="{{registration.companyName}}"/>
+					<input type="hidden" id="payStatus"  value="{{registration.payStatus}}"/>
+					<input type="hidden" id="payMent"  value="{{registration.payMent}}"/>
+					<input type="hidden" id="avatar"  value="{{registration.avatar}}"/>
+					<input type="hidden" id="cardImg"  value="{{registration.cardImg}}"/>
+					<input type="hidden" id="duration"  value="{{registration.duration}}"/>
+					<div class="mui-input-row">
+						<label>真实姓名<span style="color:red;">*</span></label>
+						<input id="realName" type="text" class="mui-input-clear" placeholder="姓名" value="{{registration.realName}}">
+					</div>
+					<div class="mui-input-row">
+						<label>性别 <span style="color:red;">*</span></label>
+						<div style="margin-top: 10px;">
+							<input  id="manId" type="radio"  name="gender" value="0" style="margin-top: 3px;">男</input>
+							<input  id="womanId" type="radio"  name="gender" value="1" style="margin-left: 20px; margin-top: 3px;">女</input>
+						</div>
+					</div>
+					<div class="mui-input-row">
+							<label>身份证号<span style="color:red;">*</span></label>
+							<input id="idCard" type="text" class="mui-input-clear" placeholder="身份证号" value="{{registration.idCard}}">
+					</div>
+					<div class="mui-input-row">
+						<label>出生年月<span style="color:red;">*</span></label>
+						<input type="text" id="birthday" data-options='{"type":"date","beginYear":1900,"endYear":2016}' 
+							class="mui-input-clear" placeholder="出生日期" readonly="readonly" value="{{registration.birthday}}">
+					</div>
+					<div class="mui-input-row">
+						<label>联系地址<span style="color:red;">*</span></label>
+						<input id="address" type="text" class="mui-input-clear" placeholder="联系地址" value="{{registration.address}}">
+					</div>
+					<div class="mui-input-row">
+						<label>联系电话</label>
+						<input id="mobile" type="text" class="mui-input-clear" placeholder="联系电话" value="{{registration.mobile}}">
+					</div>
+					<div class="mui-input-row">
+						<label>所在城市<span style="color:red;">*</span></label>
+						<input id="nowCity" type="text" class="mui-input-clear" placeholder="所在城市" value="{{registration.nowCity}}">
+					</div>
+					<div class="mui-input-row">
+						<label>隶属平台<span style="color:red;">*</span></label>
+						<input type="text" id="showPlatPicker" class="mui-input-clear" placeholder="隶属平台" readonly="readonly" value="{{registration.platName}}">
+					</div>
+					<!-- <div class="mui-input-row">
+						<label>隶属公司<span style="color:red;">*</span></label>
+						<input type="text" id="showCompanyPicker" class="mui-input-clear" placeholder="隶属公司" readonly="readonly"  value="{{registration.companyName}}">
+					</div> -->
+					<div class="mui-input-row-uploadButton" style="height: 40px;">
+						<div style="width: 100%;">
+							<div style="width: 50%; float: left; text-align: center;padding-top: 10px;">
+								<a id="idCardUploadId" href="javascript:;" class="file" style=" font-size: 14px;">上传身份证照片
+										<input id="upload" type="file" accept="image/*;" capture="camera" >
+								</a>		
+							</div>
+							<div style="width: 50%; float: left;text-align: center;padding-top: 10px; ">
+								<a id="avartUploadId" href="javascript:;" class="file" style=" font-size: 14px;">上传头像
+										<input id="avartupload" type="file" accept="image/*;" capture="camera" 
+										     style="width: 80px;">
+								</a>
+							</div>
+						</div>
+					</div>
+					<div style="width: 100%; height: 70px;">
+						<div style="width: 50%; float: left; height: 70px; text-align: center; padding-top: 5px;">
+							<img id="cardImageId"  class="img_wrap" src="images/60x60.gif" style="width: 120px; height: 60px; " />
+						</div>
+						<div style="width: 50%; float: left; height: 70px; text-align: center; padding-top: 5px;">
+							<img id="avartImageId" class="img_wrap_avart" src="images/60x60.gif" style="width: 120px; height: 60px; " />
+						</div>
+					</div>
+					<button id="nextSave" type="button" class="mui-btn mui-btn-block" 
+					    style="background-color: #31c27c; padding: 10px 0;">下一步</button>
+				</form>
+			</div>
+		</div>
+		<style type="text/css">
+			.mui-input-group:after{
+				display: none;
+			}
+		</style>
+		<script src="./js/mui.min.js"></script>
+		<script src="./js/mui.poppicker.js"></script>
+		<script src="./js/mui.picker.min.js"></script>
+		<script src="./js/config.js"></script>
+		<script src="./js/app.js"></script>
+		<script src="./js/angular.min.js"></script>
+		<script src="./js/jquery.min.js"></script>
+		<script src="./js/jweixin-1.0.0.js"></script>
+		<script src="js/wap/h5_upload.js?version=20161121185039"></script>
+		<script type="text/javascript" charset="utf-8">
+		
+			
+			function sleep(){
+               	document.getElementById("headerId").style.display = "none";
+               	document.getElementById("contentId").style.padding = "0px";
+               	document.getElementById("scroll").style.margin= "30px 0px 0px 0px";
+			}
+		
+			var ngApp = angular.module("ngApp", []);
+			ngApp.controller("mainCtrl", function ($scope) {
+				mui.init({
+					swipeBack:true //启用右滑关闭功能
+				});
+				
+				var obj = app.parseLocationQueryString();
+    			var openId = obj["openId"];
+    			//基础信息start
+    			var registrationObj = app.getState();
+            	if(!registrationObj){
+            		registrationObj = app.getRegistrationInfo();
+            	}
+            	$scope.registration = registrationObj;
+                var gender = registrationObj.gender;
+                if(gender==0){
+                	document.getElementById("manId").checked = "checked";
+                }
+                if(gender==1){
+                	document.getElementById("womanId").checked = "checked";
+                }
+                if(registrationObj.avatar){
+                	document.getElementById('avartImageId').src = registrationObj.avatar;
+                }
+                if(registrationObj.cardImg){
+                	document.getElementById('cardImageId').src = registrationObj.cardImg;
+                }
+                //基础信息end
+				
+				(function($) {
+					$('#scroll').scroll({
+						indicators: true //是否显示滚动条
+					});
+					
+					//初始化  兼容大屏
+					var bodyheight = window.screen.height;
+					if(bodyheight>710){
+						document.getElementById("regFormId").style.height = (bodyheight-88)+"px";
+						document.getElementById("nextSave").style="background-color: #31c27c;position:absolute;bottom:0;";
+					}
+					//alert(bodyheight+"--"+document.getElementById("regFormId").style.height);
+					//监听屏幕变化 
+					window.addEventListener("resize", function () {  
+			            // 得到屏幕尺寸 (内部/外部宽度，内部/外部高度)  
+						bodyheight = window.screen.height;
+						if(bodyheight<710){
+							document.getElementById("regFormId").style.height="auto";
+							document.getElementById("nextSave").style="background-color: #31c27c;";
+						}else{
+							/* if(bodyheight>710 && bodyheight < 770){
+								document.getElementById("regFormId").style.height = (bodyheight-150)+"px";
+							}else{
+								document.getElementById("regFormId").style.height = (bodyheight-200)+"px";
+							} */
+							document.getElementById("regFormId").style.height = (bodyheight-88)+"px";
+							document.getElementById("nextSave").style="background-color: #31c27c;position:absolute;bottom:0;";
+						}
+			        }, false);  
+					
+					//获取基础数据信息
+					var platArray ;//平台公司数据
+					var companyArray;//司管公司数据
+					var cityData;//城市
+					var price = "0";
+			        var url = CONFIG.basePath + "/api/getRegistrationBaseInfo.json";
+			        mui.post(url, {openId: openId,driverType:"1"}, function (res) {
+			            var data = app.parseJsonResult(res);
+			            if (data) {
+			            	//先填充基础信息
+			                $scope.$apply();
+			            	
+			                document.getElementById("price").value = data.term.price;
+			                document.getElementById("duration").value = data.term.duration;
+			                //考试期限和价格赋值给报名对象
+			                platArray =  data.plats;
+			                companyArray=  data.companys;
+			                cityData = data.areas;
+			                setPlatPicker();
+			                setCityPicker();
+			                //初始化级联
+			                var platCode = registrationObj.platCode;
+			                /* if(platCode){
+			                	setCompanyPicker(platCode);//初始化级联司管公司
+			                } */
+			            }
+			        });
+					
+					//隶属平台
+					var platPicker = new $.PopPicker();
+					function setPlatPicker(){
+						platPicker.setData(platArray);
+						var showPlatPickerButton = document.getElementById('showPlatPicker');
+						showPlatPickerButton.addEventListener('tap', function(event) {
+							platPicker.show(function(items) {
+								var val = JSON.stringify(items[0].text);
+								showPlatPickerButton.value = val.substr(1,val.length-2);
+								var platCode = JSON.stringify(items[0].value);
+								platCode = platCode.substr(1,platCode.length-2);
+								document.getElementById("platCode").value = platCode;
+								document.getElementById("platName").value = val.substr(1,val.length-2);
+								//先清空原有值，再级联
+								//document.getElementById("companyId").value = "";
+								//document.getElementById('showCompanyPicker').value = "";
+								//setCompanyPicker(platCode);//级联司管公司
+							});
+						}, false);
+					}
+					//隶属司管公司
+					var companyPicker = new $.PopPicker();
+					function setCompanyPicker(platCode){
+						var companyUrl = CONFIG.basePath + "/api/getDriverCompany.json";
+				        mui.post(companyUrl, {platCode: platCode}, function (res) {
+				            var data = app.parseJsonResult(res);
+				            if (data) {
+				                companyArray=  data;
+								companyPicker.setData(companyArray);
+								var showCompanyPickerButton = document.getElementById('showCompanyPicker');
+								showCompanyPickerButton.addEventListener('tap', function(event) {
+									companyPicker.show(function(items) {
+										var val = JSON.stringify(items[0].text);
+										showCompanyPickerButton.value = val.substr(1,val.length-2);
+										document.getElementById("companyName").value = val.substr(1,val.length-2);
+										var companyId = JSON.stringify(items[0].value);
+										document.getElementById("companyId").value = companyId.substr(1,companyId.length-2);
+									});
+								}, false);
+				            }
+				        });
+						
+					}
+					
+					//选择城市
+					var cityPicker = new $.PopPicker({
+						layer: 2
+					});
+					function setCityPicker(){
+						cityPicker.setData(cityData);
+						var showCityPickerButton = document.getElementById('nowCity');
+						var cityResult = document.getElementById('nowCity');
+						showCityPickerButton.addEventListener('tap', function(event) {
+							cityPicker.show(function(items) {
+								cityResult.value = items[0].text + "--" + items[1].text;
+								document.getElementById("proviceCode").value = items[0].value;
+								document.getElementById("cityCode").value = items[1].value;
+								document.getElementById("proviceName").value = items[0].text;
+								document.getElementById("cityName").value = items[1].text;
+							});
+						}, false);
+					}
+					
+					//选择生日
+					var showBirthdayButton = document.getElementById('birthday');
+					showBirthdayButton.addEventListener('tap', function(event) {
+						var optionsJson = this.getAttribute('data-options') || '{}';
+						var options = JSON.parse(optionsJson);
+						var picker = new $.DtPicker(options);
+							picker.show(function(rs) {
+								showBirthdayButton.value =  rs.text;
+								picker.dispose();
+							});
+					}, false);
+					
+					
+					
+					/*
+		             * 监听下一步页面
+		             */
+		            document.getElementById('nextSave').addEventListener('tap', function (event) {
+		            	
+		            	//保存至数据库
+		            	var proviceCode = document.getElementById('proviceCode').value;//省份编号
+		            	var cityCode = document.getElementById('cityCode').value;//城市编号
+		            	var realName = document.getElementById('realName').value;//真实姓名
+		            	var idCard = document.getElementById('idCard').value;//身份证号
+		            	var birthday = document.getElementById('birthday').value;//生日
+		            	var address = document.getElementById('address').value;//地址
+		            	var companyId = document.getElementById('companyId').value;//司管公司ID
+		            	var companyName = document.getElementById('companyName').value;//司管公司名称
+		            	var platCode = document.getElementById('platCode').value;//平台编码
+		            	var platName = document.getElementById("platName").value;//平台名称
+		            	var proviceName = document.getElementById('proviceName').value;//省份名称
+		            	var cityName = document.getElementById('cityName').value;//城市名称
+		            	var price = document.getElementById('price').value;//考试价格
+		            	var duration = document.getElementById('duration').value;//考试期限
+		            	var examinationTicket = document.getElementById('examinationTicket').value;//准考证号
+		            	var mobile = document.getElementById('mobile').value;//电话
+		            	var gender = jQuery('input:radio[name="gender"]:checked').val();//性别
+		            	var registrationId = document.getElementById('registrationId').value;
+		            	var payStatus = document.getElementById("payStatus").value;
+		            	var payMent = document.getElementById("payMent").value;
+		            	var avatar = document.getElementById("avatar").value;
+		            	var cardImg = document.getElementById("cardImg").value;
+		            	
+		            	
+		            	if(!realName){mui.toast("请填写真实姓名");return false;}
+		            	if(!gender){mui.toast("请选择性别");return false;}
+		            	if(!idCard){mui.toast("请填写身份证号");return false;}
+		            	if(!app.checkIdCard(idCard)){mui.toast("身份证号不合法");return false;}
+		            	if(!birthday){mui.toast("请选择出生年月");return false;}
+		            	if(!address){mui.toast("请填写联系地址");return false;}
+		            	if(mobile && !app.checkPhone(mobile)){mui.toast("手机号不合法");return false;}
+		            	if(!proviceCode || !cityCode){mui.toast("请选择所在城市");return false;}
+		            	if(!platCode){mui.toast("请选择隶属平台");return false;}
+		            	//if(!companyId){mui.toast("请选择隶属公司");return false;}
+		            	
+		            	//生成准考证号
+		            	/* if(!examinationTicket){
+		            		examinationTicket = cityCode+platCode+app.getFormatDate()+app.randomWord(false,4,4);
+		            		console.log("身份证号新生成="+examinationTicket);
+		            	} */
+		            	
+		            	if(!openId){
+		            		openId = "anonymous";
+		            	}
+		            	if(!payStatus){
+		            		payStatus = "0";
+		            	}
+		            	
+		            	var data = {
+							proviceCode: proviceCode,
+							cityCode: cityCode,
+							realName: realName,
+							birthday: birthday,
+							address: address,
+							companyId: companyId,
+							companyName:companyName,
+							platCode: platCode,
+							platName: platName,
+							proviceName: proviceName,
+							cityName: cityName,
+							price: price,
+							duration:duration,
+							mobile: mobile,
+							gender: gender,
+							idCard: idCard,
+							examinationTicket:examinationTicket,
+							openId: openId,
+							id:registrationId,
+							payStatus:payStatus,
+							payMent:payMent,
+							avatar:avatar,
+							cardImg:cardImg,
+							driverType:1,
+							nowCity:proviceName+'-'+cityName
+						};
+						app.setState(data);
+			            var url = CONFIG.basePath + "/api/registration.json";
+			            mui.post(url, data, function (res) {
+			                var data = JSON.parse(res);
+			                var rid = data.data;
+			                var robj = app.getState();
+			                robj.id = rid;
+			                app.setState(robj);
+			                document.getElementById("registrationId").value = rid;
+			                console.log("保存id="+rid);
+			                if(data.result == "1"){
+			                	mui.toast("保存成功");
+			                	$.openWindow({
+				                    /*url: "examination-success.html?examinationTicket="+examinationTicket+"&realName="+realName+"&gender="+gender
+				                    		+"&birthday="+birthday+"&idCard="+idCard+"&proviceName="+proviceName+"&cityName="+cityName
+				                    		+"&companyName="+companyName+"&platName="+platName+"&payStatus="+payStatus,*/
+				                    url: "examination-pay.html",
+				                    id: "examination-pay.html",
+				                    show: {
+				                        aniShow: 'pop-in'
+				                    }
+				                });
+			                }else{
+			                	mui.toast("网络异常，请稍后再试");
+			                }
+			            });
+		            	
+		            });
+					
+					
+					
+				})(mui);
+				
+				//监听图片上传按钮 头像上传start
+				var avartImage = document.getElementById('avartImageId');
+	            document.getElementById('avartUploadId').addEventListener('tap', function (event) {
+		            /* var nowUrl = window.location.href;
+		            var timestamp;
+		            var randomStr;
+		            var signatureStr;
+		            var token;
+		            console.log('当前url=' + nowUrl);
+		            var signatureUrl = CONFIG.basePath + '/api/wx/signature.json';
+		            var saveImagesUrl = CONFIG.basePath + '/api/wx/saveImages.json';
+		            var data = {
+		                appid: 'wx5dba4281427b2275',
+		                secret: 'a6676bedca8af20a4d46511cb83b6dda',
+		                url: nowUrl
+		            };
+		            $.post(signatureUrl, data, function (res) {
+		                var success = JSON.parse(res);
+		                if (success.result=="1") {
+		                    var signatureObj = success.data;
+		                    timestamp = signatureObj.timestamp;
+		                    randomStr = signatureObj.noncestr;
+		                    signatureStr = signatureObj.signature;
+		                    token = signatureObj.token;
+		                    console.log('时间戳=' + timestamp + ",随机字符串=" + randomStr + ",签名=" + signatureStr + ",token=" + token);
+		                    wx.config({
+		                        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+		                        appId: 'wx5dba4281427b2275', // 必填，公众号的唯一标识
+		                        timestamp: timestamp, // 必填，生成签名的时间戳
+		                        nonceStr: randomStr, // 必填，生成签名的随机串
+		                        signature: signatureStr,// 必填，签名，见附录1
+		                        jsApiList: ['chooseImage', 'previewImage', 'uploadImage', 'downloadImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+		                    });
+		
+		
+		                    wx.error(function (res) {
+		                        console.log(res);
+		                    });
+		                    wx.ready(function () {
+		                        wx.chooseImage({
+		                            count: 1,
+		                            success: function (res) {
+		                                var localIds = res.localIds;
+		                                var src = localIds[0];
+		                                avartImage.src = src;
+		                                // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+		                                wx.uploadImage({
+		                                    localId: src, // 需要上传的图片的本地ID，由chooseImage接口获得
+		                                    isShowProgressTips: 1, // 默认为1，显示进度提示
+		                                    success: function (res) {
+		                                        var serverImagId = res.serverId;
+		                                        $.post(saveImagesUrl, {type: 'avatar', accessToken: token, mediaIds: serverImagId}, function (res) {
+		                                            var httpUrl = JSON.parse(res).data;
+		                                            if(httpUrl){
+		                                            	document.getElementById("avatar").value = httpUrl;
+			                                            mui.toast("头像上传成功");
+		                                            }
+		                                        });
+		                                    }
+		                                });
+		                            }
+		                        });
+		                    });
+		                }
+		            }); */
+		        
+	            });
+				//头像上传end
+				//监听图片上传按钮 身份证照上传start
+				var cardImage = document.getElementById('cardImageId');
+	            document.getElementById('idCardUploadId').addEventListener('tap', function (event) {
+		            /* var nowUrl = window.location.href;
+		            var timestamp;
+		            var randomStr;
+		            var signatureStr;
+		            var token;
+		            console.log('当前url=' + nowUrl);
+		            var signatureUrl = CONFIG.basePath + '/api/wx/signature.json';
+		            var saveImagesUrl = CONFIG.basePath + '/api/wx/saveImages.json';
+		            var data = {
+		                appid: 'wx5dba4281427b2275',
+		                secret: 'a6676bedca8af20a4d46511cb83b6dda',
+		                url: nowUrl
+		            };
+		            $.post(signatureUrl, data, function (res) {
+		                var success = JSON.parse(res);
+		                if (success.result=="1") {
+		                    var signatureObj = success.data;
+		                    timestamp = signatureObj.timestamp;
+		                    randomStr = signatureObj.noncestr;
+		                    signatureStr = signatureObj.signature;
+		                    token = signatureObj.token;
+		                    console.log('时间戳=' + timestamp + ",随机字符串=" + randomStr + ",签名=" + signatureStr + ",token=" + token);
+		                    wx.config({
+		                        debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+		                        appId: 'wx5dba4281427b2275', // 必填，公众号的唯一标识
+		                        timestamp: timestamp, // 必填，生成签名的时间戳
+		                        nonceStr: randomStr, // 必填，生成签名的随机串
+		                        signature: signatureStr,// 必填，签名，见附录1
+		                        jsApiList: ['chooseImage', 'previewImage', 'uploadImage', 'downloadImage'] // 必填，需要使用的JS接口列表，所有JS接口列表见附录2
+		                    });
+		
+		
+		                    wx.error(function (res) {
+		                        console.log(res);
+		                    });
+		                    wx.ready(function () {
+		                        wx.chooseImage({
+		                            count: 1,
+		                            success: function (res) {
+		                                var localIds = res.localIds;
+		                                var src = localIds[0];
+		                                cardImage.src = src;
+		                                // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+		                                wx.uploadImage({
+		                                    localId: src, // 需要上传的图片的本地ID，由chooseImage接口获得
+		                                    isShowProgressTips: 1, // 默认为1，显示进度提示
+		                                    success: function (res) {
+		                                        var serverImagId = res.serverId;
+		                                        $.post(saveImagesUrl, {type: 'idCard', accessToken: token, mediaIds: serverImagId}, function (res) {
+		                                            var httpUrl = JSON.parse(res).data;
+		                                            if(httpUrl){
+		                                            	document.getElementById("cardImg").value = httpUrl;
+			                                            mui.toast("身份证照上传成功");
+		                                            }
+		                                        });
+		                                    }
+		                                });
+		                            }
+		                        });
+		                    });
+		                }
+		            }); */
+		        
+	            });
+				//身份证照上传end
+				
+				
+				
+				
+				//图片滚动
+				var slider = mui("#slider");
+				slider.slider({
+					interval: 3000
+				});
+			
+			});
+		
+		</script>
+	</body>
+</html>

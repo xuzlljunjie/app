@@ -1,0 +1,170 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		
+		<style type="text/css">
+			body{
+				height: 100%;
+	            background-color: #FFFFFF;
+			}
+			.mui-content {
+	            padding: 0;
+	            background-color: #FFFFFF;
+	        }
+		</style>
+		
+		
+	</head>
+
+	<body>
+		
+		<div class="mui-content" style="color: #FFFFFF;">
+			<div style="width: 90%;padding-top: 25px; margin-left: auto; margin-right: auto; color: #FFFFFF;">
+				<p style="text-align: center;color: #000000; ">中国汽车流通协会代驾司机</p>
+				<p style="text-align: center;color: #000000; font-size: 20px;">准&nbsp;&nbsp;考&nbsp;&nbsp;证</p>
+				<p style="text-align: left;color: #000000; ">准考证编号：<span id="examinationTicket"></span></p>
+				<div style="width: 100%; height: 140px;margin-bottom:15px;">
+					<div style="width: 70%; float: left;height: 140px;">
+						<p style="text-align: left;color: #000000; ">姓名：<span id="realName"></span></p>
+						<p style="text-align: left;color: #000000; ">性别：<span id="gender"></span></p>
+						<p style="text-align: left;color: #000000; ">年龄：<span id="age"></span></p>
+						<p style="text-align: left;color: #000000; ">身份证号：<span id="idCard"></span></p>
+						<p style="text-align: left;color: #000000; ">考试地区：<span id="nowCity"></span></p>
+					</div>
+					<div style="width: 30%; float: left;height: 140px;">
+						<img id="avatarImgId" alt="暂无" src="images/60x60.gif" style="width: 100px; height: 140px;" />
+					</div>
+				</div>
+				<p style="text-align: left;color: #000000; ">隶属平台：<span id="platName"></span></p>
+				<!-- <p style="text-align: left;color: #000000; ">隶属公司：<span id="companyName"></span></p> -->
+				
+				<div style="height: 1px; border-bottom: solid 1px #000000;"></div>
+				
+				<p style="text-align: left;color: #000000; font-weight: bolder; font-size: 18px; margin-top: 15px;">考试说明：</p>
+				<p style="text-align: left;color: #000000; ">1、	考试时间地点由隶属公司通知，同时请关注报名的微信公众号系统通知；</p>
+				<p style="text-align: left;color: #000000; ">2、	其他考试规定按考试现场规定要求。</p>
+				
+				<!-- <div style="width: 100%;" id="operButtonId">
+					<div style="width: 50%; float: left; text-align: center; padding-top: 5px;">
+						<button type="button" class="mui-btn mui-btn-outlined" onclick="toUpdate('0');">返回修改</button>
+					</div>
+					<div style="width: 50%; float: left; text-align: center; padding-top: 5px;">
+						<button type="button" class="mui-btn mui-btn-primary" onclick="toPay();">去支付</button>
+					</div>
+				</div> -->
+				<div style="display: none;" id="makeupButtonId">
+					<button type="button" class="mui-btn mui-btn-danger mui-btn-block" onclick="toUpdate('1');">补考</button>
+				</div>
+				<div style="display: none;" id="examationAgainId">
+					<button type="button" class="mui-btn mui-btn-danger mui-btn-block" onclick="toUpdate('2');">重新报名</button>
+				</div>
+				
+			</div>
+		</div>
+		<!-- <img id="saveId" alt="暂无" src="">
+		<button id="saveImg">保存图片</button>	 -->
+		
+		<script src="js/mui.min.js"></script>
+		<script src="./js/jquery.min.js"></script>
+		<script src="./js/config.js"></script>
+		<script src="./js/app.js"></script>
+		<script src="./js/html2canvas.min.js"></script>
+		<script type="text/javascript">
+		
+		mui.init({
+            swipeBack: true //启用右滑关闭功能
+        });
+		//图片滚动
+		var slider = mui("#slider");
+		slider.slider({
+			interval: 3000
+		});
+		
+		var obj = app.getState();
+		var openId = obj.openId;
+		
+		//从报名之日起，如果超出设置期限则显示补考按钮          如果未付款并且预期考试期限则显示重新报名
+		var day = app.calculateDay(obj.createTime,app.formatDateFormat(new Date(),"yyyy-MM-dd"));
+		var duration = obj.duration;
+		if(obj.payStatus == "1" && day > duration){
+			mui.toast("请您补考");
+			document.getElementById("makeupButtonId").style.display = "";
+		}else if(obj.payStatus=="2"){
+			mui.toast("请您重新考试");
+			document.getElementById("examationAgainId").style.display = "";
+		}else{
+			mui.toast("请截屏保存准考证信息");
+		}
+		
+		document.getElementById("examinationTicket").innerText = obj.examinationTicket;
+		document.getElementById("realName").innerText = obj.realName;
+		if(obj.gender == 0){
+			document.getElementById("gender").innerText = "男";
+		}
+		if(obj.gender == 1){
+			document.getElementById("gender").innerText = "女";
+		}
+		document.getElementById("age").innerText = app.calculateAge(obj.birthday);
+		document.getElementById("idCard").innerText = obj.idCard;
+		document.getElementById("nowCity").innerText = obj.proviceName +"--" +obj.cityName;
+		document.getElementById("platName").innerText = obj.platName;
+		//document.getElementById("companyName").innerText = obj.companyName;
+		if(obj.avatar){
+	    	document.getElementById("avatarImgId").src = obj.avatar;
+		}
+        	
+        function toUpdate(makeup){
+        	if(makeup == "1"){//需要补考
+        		obj.id = "";
+        		obj.payMent = "";
+        		obj.payStatus = "0";
+        		obj.examinationTicket = "";
+        		app.setState(obj);
+        		goPage();
+        	}else if(makeup == "2" && obj.id){//保存表中已逾期未支付
+    			var url = CONFIG.basePath + "/api/expectNoPay.json";
+		        mui.post(url, {registrationId: obj.id}, function (res) {
+		        	var resVal = app.parseJsonResult(res);
+		        	if(resVal=="success"){
+		        		obj.id = "";
+		        		obj.examinationTicket = "";
+		        		obj.payMent = "";
+		        		obj.payStatus = "0";
+		        		app.setState(obj);
+		        		goPage();
+		        	}
+		        });
+        	}else{
+        		goPage();
+        	}
+        	
+        	function goPage(){
+        		mui.openWindow({
+	                url: "examination.html?openId="+openId+"&makeup="+makeup,
+	                id: "examination.html",
+	                show: {
+	                    aniShow: 'pop-in'
+	                }
+	            });
+        	}
+        }
+        
+        
+        $(function() {
+			$("#saveImg").click(function() {
+				html2canvas($(".mui-content")).then(function(canvas) {
+					var imgUri = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream"); // 获取生成的图片的url 
+					document.getElementById("saveId").src = imgUri;
+					//window.location.href = imgUri; // 下载图片  
+				});
+			});
+		});
+		</script>
+	</body>
+
+</html>

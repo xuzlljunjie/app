@@ -1,0 +1,102 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+	</head>
+
+	<body>
+		
+		
+		<p style="text-align: center; font-size: 25px; margin-top: 100px; color: #000000;">
+			报名系统开启中.........
+		</p>
+		
+		
+		
+		<script src="js/mui.min.js"></script>
+		<script src="js/config.js"></script>
+		<script src="js/app.js"></script>
+		<script type="text/javascript">
+			mui.init();
+			(function($) {
+				//先去后台请求当前的openId
+				var obj = app.parseLocationQueryString();
+    			var openId = obj["openId"];
+    			var code = obj["code"];
+    			if(code){
+    				var url = CONFIG.basePath + "/api/wx/getOpenId.json";
+	    			mui.post(url, {code: code}, function (res) {
+	    				res = JSON.parse(res);
+	    				if(res.result == "1"){
+	    					if(res.data == "fail"){
+	    						console.log("data null");
+			    				goPage();
+	    					}else{
+	    						openId = res.data;
+	    						console.log(openId);
+	    						goPage();
+	    					}
+	    				}else{
+	    					console.log("no data");
+		    				goPage();
+	    				}
+	    			});
+    			}else{
+    				console.log("code null");
+    				goPage();
+    			}
+    			
+    			function goPage(){
+    				//获取报名信息
+    				if(!openId){//openId为空   直接报名
+    					app.setState("");
+    					openId = "anonymous";
+    					mui.openWindow({
+    	                    url: "examination.html?openId="+openId,
+    	                    id: "examination.html",
+    	                    show: {
+    	                        aniShow: 'pop-in'
+    	                    }
+    	                });
+    				}else{
+    					var result = app.getRegistrationInfo(openId);
+    					if(!result){
+    						result = "fail";
+    					}
+    					if(result=="fail" ){//没有查询到内容   直接报名
+    						mui.openWindow({
+    		                    url: "examination.html?openId="+openId,
+    		                    id: "examination.html",
+    		                    show: {
+    		                        aniShow: 'pop-in'
+    		                    }
+    		                });
+    					}else if(result.payStatus == "1" || result.payStatus == "2" ){//已报名，支付成功或者需要重新考试，进入报名成功页面
+    						mui.openWindow({
+    		                    url: "examination-success.html",
+    		                    id: "examination-success.html",
+    		                    show: {
+    		                        aniShow: 'pop-in'
+    		                    }
+    		                });
+    					}else if(result.payStatus == "0" ){//已报名，未支付，进入去支付页面
+    						mui.openWindow({
+    		                    url: "examination-pay.html",
+    		                    id: "examination-pay.html",
+    		                    show: {
+    		                        aniShow: 'pop-in'
+    		                    }
+    		                });
+    					}
+    				}
+    			}
+    			
+			})(mui);
+		</script>
+	</body>
+
+</html>

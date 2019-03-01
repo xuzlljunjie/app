@@ -1,0 +1,162 @@
+<!doctype html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<link href="css/mui.min.css" rel="stylesheet" />
+		
+		<style type="text/css">
+			body{
+				height: 100%;
+	            background-color: #FFFFFF;
+			}
+			.mui-content {
+	            padding: 0;
+	            background-color: #FFFFFF;
+	        }
+	        #headerId{
+				display: none;
+			}
+			#contentId{
+				padding: 0;
+			}
+		</style>
+		
+		
+	</head>
+
+	<body>
+		
+		<header id="headerId" class="mui-bar mui-bar-nav" style="padding-left: 0; padding-right: 0;background-color: #5CBDF3;">
+			<div id="slider" class="mui-slider">
+				<div class="mui-slider-group mui-slider-loop">
+					<!-- 额外增加的一个节点(循环轮播：第一个节点是最后一张轮播) -->
+					<div class="mui-slider-item mui-slider-item-duplicate">
+						<a href="#">
+							<img src="./images/cha.png" height="44" onclick="sleep();"  style="float: left; width: 15%;">
+							<img src="./images/cheyouhezi2.png" height="44" onclick="javascript:window.location.href='http://a.app.qq.com/o/simple.jsp?pkgname=cn.ieauto.autogroup.cardora'"  style="float: left; width: 85%;">
+						</a>	
+					</div>
+					<!-- 第一张 -->
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="./images/cha.png" height="44" onclick="sleep();"  style="float: left; width: 15%;">
+							<img src="./images/cheyouhezi2.png" height="44" onclick="javascript:window.location.href='http://a.app.qq.com/o/simple.jsp?pkgname=cn.ieauto.autogroup.cardora'"  style="float: left; width: 85%;">
+						</a>
+					</div>
+					<!-- 第二张 -->
+					<div class="mui-slider-item">
+						<a href="#">
+							<img src="./images/cha.png" height="44" onclick="sleep();"  style="float: left; width: 15%;">
+							<img src="./images/zijia2.png" height="44" onclick="javascript:window.location.href='http://a.app.qq.com/o/simple.jsp?pkgname=cn.ieauto.autogroup.cardora'"  style="float: left; width: 85%;">
+						</a>
+					</div>
+					<!-- 额外增加的一个节点(循环轮播：最后一个节点是第一张轮播) -->
+					<div class="mui-slider-item mui-slider-item-duplicate">
+						<a href="#">
+							<img src="./images/cha.png" height="44" onclick="sleep();"  style="float: left; width: 15%;">
+							<img src="./images/cheyouhezi2.png" height="44" onclick="javascript:window.location.href='http://a.app.qq.com/o/simple.jsp?pkgname=cn.ieauto.autogroup.cardora'"  style="float: left; width: 85%;">
+						</a>
+					</div>
+				</div>
+			</div>
+		</header>
+		
+		<div id="contentId" class="mui-content" style="color: #FFFFFF;">
+			<div style="width: 90%;padding-top: 25px; margin-left: auto; margin-right: auto; color: #FFFFFF;">
+				<p style="text-align: center;color: #000000;padding-top: 15px; ">
+					<img alt="暂无" src="./images/zjz.png" width="90%" height="220px">
+				</p>
+				<p style="text-align: left;color: #000000; padding-top: 15px;">中国汽车流通协会代驾司机上岗证</p>
+				<p style="text-align: left;color: #000000; ">考试费:<span id="examinationPriceId" style="color: red;"></span> </p>
+				
+				<div style="width: 100%;" id="operButtonId">
+					<div style="width: 50%; float: left; text-align: center; padding-top: 15px;">
+						<button type="button" class="mui-btn mui-btn-outlined" onclick="toUpdate('0');">返回修改</button>
+					</div>
+					<div style="width: 50%; float: left; text-align: center; padding-top: 15px;">
+						<button type="button" class="mui-btn mui-btn-primary" onclick="toPay();">去支付</button>
+					</div>
+				</div>
+				<div style="display: none;" id="examationAgainId">
+					<button type="button" class="mui-btn mui-btn-danger mui-btn-block" onclick="toUpdate('2');">重新报名</button>
+				</div>
+				
+			</div>
+		</div>	
+		
+		<script src="js/mui.min.js"></script>
+		<script src="./js/jquery.min.js"></script>
+		<script src="./js/config.js"></script>
+		<script src="./js/app.js"></script>
+		<script type="text/javascript">
+		function sleep(){
+           	document.getElementById("headerId").style.display = "none";
+           	document.getElementById("contentId").style.padding = "0px";
+		}
+		mui.init({
+            swipeBack: true //启用右滑关闭功能
+        });
+		//图片滚动
+		var slider = mui("#slider");
+		slider.slider({
+			interval: 3000
+		});
+		//var obj = app.parseLocationQueryString();
+		var obj = app.getState();
+		var openId = obj.openId;
+		//从报名之日起，如果超出设置期限则显示补考按钮          如果未付款并且预期考试期限则显示重新报名
+		var day = app.calculateDay(obj.createTime,app.formatDateFormat(new Date(),"yyyy-MM-dd"));
+		var duration = obj.duration;
+		if((obj.payStatus == "0"  && day > duration) || obj.payStatus=="2"){
+			document.getElementById("operButtonId").style.display = "none";
+			document.getElementById("examationAgainId").style.display = "";
+		}
+		document.getElementById("examinationPriceId").innerText = obj.price+"元";
+        	
+        function toPay(){
+			var toUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx91e9350b8ea11c36&redirect_uri=http://www.ieauto.cn/payCallback.html&response_type=code&scope=snsapi_base&state=123#wechat_redirect";
+			window.location.href = toUrl;
+		}
+        
+        function toUpdate(makeup){
+        	if(makeup == "1"){//需要补考
+        		obj.id = "";
+        		obj.payMent = "";
+        		obj.payStatus = "0";
+        		obj.examinationTicket = "";
+        		app.setState(obj);
+        		goPage();
+        	}else if(makeup == "2" && obj.id){//保存表中已逾期未支付
+    			var url = CONFIG.basePath + "/api/expectNoPay.json";
+		        mui.post(url, {registrationId: obj.id}, function (res) {
+		        	var resVal = app.parseJsonResult(res);
+		        	if(resVal=="success"){
+		        		obj.id = "";
+		        		obj.examinationTicket = "";
+		        		obj.payMent = "";
+		        		obj.payStatus = "0";
+		        		app.setState(obj);
+		        		goPage();
+		        	}
+		        });
+        	}else{
+        		goPage();
+        	}
+        	
+        	function goPage(){
+        		mui.openWindow({
+	                url: "examination.html?openId="+openId+"&makeup="+makeup,
+	                id: "examination.html",
+	                show: {
+	                    aniShow: 'pop-in'
+	                }
+	            });
+        	}
+        }
+		</script>
+	</body>
+
+</html>
